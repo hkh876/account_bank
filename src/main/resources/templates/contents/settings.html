@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base_layout}">
+<head>
+    <title>설정</title>
+    <link th:href="@{/css/settings.css}" rel="stylesheet">
+</head>
+<body>
+    <th:block layout:fragment="contents">
+        <div class="py-3 px-2">
+            <h2 class="text-center">설정</h2>
+            <ul class="list-group list-group-flush border-bottom">
+                <a class="list-group-item d-flex" th:href="@{/user/logout}">
+                    <img class="me-3 setting-icon" th:src="@{/images/settings/logout_icon.png}" alt="logout icon">
+                    <span>로그아웃</span>
+                </a>
+            </ul>
+        </div>
+    </th:block>
+</body>
+</html>

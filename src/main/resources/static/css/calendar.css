@@ -1,0 +1,83 @@
+.fc .fc-toolbar.fc-header-toolbar {
+    padding: 2rem 1rem 0 1rem;
+}
+
+.fc .fc-toolbar-title {
+    font-weight: bold;
+}
+
+.fc-h-event .fc-event-title-container {
+    text-align: end;
+}
+
+.setting-icon {
+    width: 24px;
+}
+
+.item-container {
+    overflow-y: auto;
+}
+
+.target-icon,
+.category-icon {
+    width: 48px;
+    padding: 4px;
+}
+
+/* iPhone SE */
+@media (375px <= width < 412px) {
+    .fc .fc-toolbar.fc-header-toolbar {
+        padding: 1rem 1rem 0 1rem;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 1rem;
+    }
+
+    .fc .fc-button,
+    .fc .fc-col-header-cell-cushion,
+    .fc .fc-daygrid-day-number,
+    .category-name,
+    .description-text,
+    .money-text {
+        font-size: 0.75rem;
+    }
+
+    .fc-h-event .fc-event-title {
+        font-size: 0.6rem;
+    }
+
+    .fc .fc-view-harness {
+        min-height: 425px;
+    }
+
+    .item-container {
+        min-height: 224px;
+    }
+
+    .target-icon,
+    .category-icon {
+        width: 36px;
+    }
+}
+
+/* Galaxy Note 10+ */
+@media (412px <= width < 820px) {
+    .fc .fc-toolbar.fc-header-toolbar {
+        padding: 1rem 1rem 0 1rem;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 1rem;
+    }
+
+    .fc .fc-button,
+    .fc .fc-col-header-cell-cushion,
+    .fc .fc-daygrid-day-number {
+        font-size: 0.75rem;
+    }
+
+    .fc .fc-view-harness {
+        min-height: 425px;
+    }
+}

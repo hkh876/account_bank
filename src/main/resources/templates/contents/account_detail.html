@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base_layout}">
+<head>
+    <title>가계부 정보</title>
+    <link th:href="@{/css/account.css}" rel="stylesheet">
+</head>
+<body>
+    <th:block layout:fragment="contents">
+        <form method="post" th:object="${account}">
+            <div class="p-3">
+                <input type="hidden" class="form-control border-0 border-bottom" th:field="*{dateStr}">
+                <!-- only display -->
+                <div class="mb-3">
+                    <input type="text" class="form-control border-0 border-bottom" th:field="*{displayDate}" readonly>
+                    <p class="text-danger" th:if="${#fields.hasErrors('dateStr')}" th:errors="*{dateStr}">날짜 정보 오류</p>
+                </div>
+                <div class="mb-3">
+                    <input type="number" class="form-control border-0 border-bottom" min="0" th:field="*{money}"
+                        onkeyup="onMoneyKeyUp(event)">
+                    <p class="text-danger" th:if="${#fields.hasErrors('money')}">가격 정보 오류</p>
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control border-0 border-bottom" placeholder="상세 내역을 입력해 주세요."
+                           th:field="*{description}">
+                </div>
+                <div>
+                    <div class="d-flex">
+                        <th:block th:each="target : ${targets}">
+                            <div class="form-check">
+                                <input class="form-check-input d-none target-radio" type="radio" name="targetId"
+                                       th:id="|targetRadio${target.id}|" th:value="${target.id}"
+                                       th:checked="${target.id == account.targetId} ? 'true'">
+                                <label class="form-check-label" th:for="|targetRadio${target.id}|">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <img class="target-icon" th:src="@{|/images/target/${target.targetIcon}|}">
+                                        <span th:text="${target.name}">name</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </th:block>
+                    </div>
+                    <span class="pt-1 text-danger" th:if="${#fields.hasErrors('targetId')}" th:errors="*{targetId}">대상 선택 오류</span>
+                </div>
+                <hr/>
+                <div>
+                    <div class="d-flex flex-wrap">
+                        <th:block th:each="category : ${categories}">
+                            <div class="form-check">
+                                <input class="form-check-input d-none target-radio" type="radio" name="categoryId"
+                                       th:id="|categoryRadio${category.id}|" th:value="${category.id}"
+                                       th:checked="${category.id == account.categoryId} ? 'true'">
+                                <label class="form-check-label" th:for="|categoryRadio${category.id}|">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <img class="category-icon" th:src="@{|/images/category/${category.categoryIcon}|}">
+                                        <span th:text="${category.name}">name</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </th:block>
+                    </div>
+                    <span class="pt-1 text-danger" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}">카테고리 선택 오류</span>
+                </div>
+                <hr/>
+                <div>
+                    <button type="submit" class="btn btn-success">수정</button>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">삭제</button>
+                    <a type="button" class="btn btn-secondary" role="button" th:href="@{/account_bank/calendar}">취소</a>
+                </div>
+            </div>
+        </form>
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p>정말 삭제 할까요?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-primary" th:accountId="${account.id}"
+                                th:onclick="onDeleteClick(this.getAttribute('accountId'))">확인</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+    <th:block layout:fragment="scripts">
+        <script th:src="@{/libs/rolldate.min.js}"></script>
+        <script th:src="@{/js/account_detail.js}"></script>
+    </th:block>
+</body>
+</html>

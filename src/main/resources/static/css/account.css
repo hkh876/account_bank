@@ -1,0 +1,26 @@
+.form-check {
+    padding-left: 0;
+    padding-right: 1em;
+}
+
+.target-radio + label {
+    opacity: 0.5;
+}
+
+.target-radio:checked + label {
+    opacity: 1;
+}
+
+.target-icon,
+.category-icon {
+    width: 48px;
+    padding: 4px;
+}
+
+/* iPhone SE */
+@media (375px <= width < 412px) {
+    .target-icon,
+    .category-icon {
+        width: 36px;
+    }
+}
