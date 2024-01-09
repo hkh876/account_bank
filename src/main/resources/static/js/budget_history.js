@@ -12,25 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 const dateStrInput = document.querySelector("#displayDate");
                 dateStrInput.value = value;
 
-                // real date
-                const dateStr = document.querySelector("#dateStr");
-                dateStr.value = date;
+                const dateToStr = dateToString(tempDate);
+                sendRequest(dateToStr);
             }, 1);
         }
     });
 });
 
-function onDeleteClick(accountId) {
-    location.href = "/account_bank/delete?id=" + accountId;
-}
-
-function onMoneyKeyUp(event) {
-    const element = document.querySelector("#money");
-    const value = Number(event.target.value);
-
-    if (isNaN(value)) {
-        element.value = 0;
-    } else {
-        element.value = value;
-    }
+function sendRequest(dateStr) {
+    location.href = "?date=" + dateStr;
 }

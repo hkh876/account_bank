@@ -1,0 +1,37 @@
+.add-icon-container {
+    position: absolute;
+    right: 1rem;
+}
+
+.add-icon,
+.budget-category-icon {
+    width: 48px;
+}
+
+/* register */
+.form-check {
+    padding-left: 0;
+    padding-right: 1em;
+}
+
+.target-radio + label {
+    opacity: 0.5;
+}
+
+.target-radio:checked + label {
+    opacity: 1;
+}
+
+.target-icon {
+    width: 48px;
+    padding: 4px;
+}
+
+/* iPhone SE */
+@media (375px <= width < 412px) {
+    .add-icon,
+    .budget-category-icon,
+    .target-icon {
+        width: 36px;
+    }
+}

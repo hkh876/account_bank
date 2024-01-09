@@ -35,8 +35,8 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public List<AccountDTO> findAllByTargetDateBetween(LocalDateTime start, LocalDateTime end) {
-        List<AccountEntity> result = accountRepository.findAllByTargetDateBetween(start, end);
+    public List<AccountDTO> findAllByTargetDateBetween(LocalDateTime startDate, LocalDateTime endDate) {
+        List<AccountEntity> result = accountRepository.findAllByTargetDateBetween(startDate, endDate);
         return result.stream().map(entity -> modelMapper.map(entity, AccountDTO.class)).collect(Collectors.toList());
     }
 
@@ -60,5 +60,12 @@ public class AccountService {
     @Transactional
     public void deleteById(Long id) {
         accountRepository.deleteById(id);
+    }
+
+    public int getTotalMoneySameCategory(List<AccountDTO> accounts, Long categoryId) {
+       return accounts.stream()
+               .filter(dto -> dto.getCategory().getId() == categoryId)
+               .mapToInt(dto -> Math.abs(dto.getMoney()))
+               .sum();
     }
 }

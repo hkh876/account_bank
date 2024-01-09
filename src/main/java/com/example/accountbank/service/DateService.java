@@ -19,14 +19,14 @@ public class DateService {
         return LocalDateTime.parse(ymd, formatter);
     }
 
-    public LocalDateTime getStartDateOfYear(String date) {
+    public LocalDateTime getStartDateOfMonth(String date) {
         LocalDate localDate = LocalDate.parse(date);
         LocalDate startDate = localDate.with(TemporalAdjusters.firstDayOfMonth());
 
         return startDate.atStartOfDay();
     }
 
-    public LocalDateTime getEndDateOfYear(String date) {
+    public LocalDateTime getEndDateOfMonth(String date) {
         LocalDate localDate = LocalDate.parse(date);
         LocalDate endDate = localDate.with(TemporalAdjusters.lastDayOfMonth());
 

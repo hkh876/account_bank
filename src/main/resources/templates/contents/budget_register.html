@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base_layout}">
+<head>
+    <title>예산 등록</title>
+    <link th:href="@{/css/budget.css}" rel="stylesheet">
+</head>
+<body>
+    <th:block layout:fragment="contents">
+        <form method="post" th:object="${budget}">
+            <div class="p-3">
+                <div class="mb-3">
+                    <input type="number" class="form-control border-0 border-bottom" min="0" th:field="*{money}"
+                           onkeyup="onMoneyKeyUp(event)">
+                </div>
+                <div>
+                    <div class="d-flex flex-wrap">
+                        <th:block th:each="category : ${categories}">
+                            <div class="form-check">
+                                <input class="form-check-input d-none target-radio" type="radio" name="categoryId"
+                                       th:id="|categoryRadio${category.id}|" th:value="${category.id}"
+                                       th:checked="${category.id == budget.categoryId} ? 'true'">
+                                <label class="form-check-label" th:for="|categoryRadio${category.id}|">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <img class="target-icon" th:src="@{|/images/category/${category.categoryIcon}|}">
+                                        <span th:text="${category.name}">name</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </th:block>
+                    </div>
+                    <span class="pt-1 text-danger" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}">카테고리 선택 오류</span>
+                    <span class="pt-1 text-danger" th:if="${#fields.hasErrors('duplicate')}" th:errors="*{duplicate}">등록된 카테고리</span>
+                </div>
+                <hr/>
+                <div>
+                    <button type="submit" class="btn btn-success">저장</button>
+                    <a type="button" class="btn btn-secondary" role="button" th:href="@{/account_bank/settings/budget}">취소</a>
+                </div>
+            </div>
+        </form>
+    </th:block>
+    <th:block layout:fragment="scripts">
+        <script th:src="@{/js/budget_register.js}"></script>
+    </th:block>
+</body>
+</html>

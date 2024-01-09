@@ -3,7 +3,6 @@ package com.example.accountbank.enums;
 import lombok.Getter;
 
 import java.util.Arrays;
-import java.util.NoSuchElementException;
 
 @Getter
 public enum MemberRole {

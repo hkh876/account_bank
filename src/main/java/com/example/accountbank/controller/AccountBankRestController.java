@@ -30,8 +30,8 @@ public class AccountBankRestController {
     @GetMapping("")
     public ResponseEntity<List<AccountDTO>> getAllAccount(String date) {
         // 시작, 끝 날짜 구하기
-        LocalDateTime start = dateService.getStartDateOfYear(date);
-        LocalDateTime end = dateService.getEndDateOfYear(date);
+        LocalDateTime start = dateService.getStartDateOfMonth(date);
+        LocalDateTime end = dateService.getEndDateOfMonth(date);
         List<AccountDTO> accounts = accountService.findAllByTargetDateBetween(start, end);
 
         return ResponseEntity.status(HttpStatus.OK).body(accounts);
