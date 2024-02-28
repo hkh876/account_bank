@@ -32,7 +32,7 @@
                                        th:checked="${target.id == account.targetId} ? 'true'">
                                 <label class="form-check-label" th:for="|targetRadio${target.id}|">
                                     <div class="d-flex flex-column align-items-center">
-                                        <img class="target-icon" th:src="@{|/images/target/${target.targetIcon}|}">
+                                        <img class="target-icon" th:src="@{/images/target/{icon}(icon=${target.targetIcon})}">
                                         <span th:text="${target.name}">name</span>
                                     </div>
                                 </label>
@@ -51,7 +51,7 @@
                                        th:checked="${category.id == account.categoryId} ? 'true'">
                                 <label class="form-check-label" th:for="|categoryRadio${category.id}|">
                                     <div class="d-flex flex-column align-items-center">
-                                        <img class="category-icon" th:src="@{|/images/category/${category.categoryIcon}|}">
+                                        <img class="category-icon" th:src="@{/images/category/{icon}(icon=${category.categoryIcon})}">
                                         <span th:text="${category.name}">name</span>
                                     </div>
                                 </label>
@@ -64,7 +64,7 @@
                 <div>
                     <button type="submit" class="btn btn-success">수정</button>
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">삭제</button>
-                    <a type="button" class="btn btn-secondary" role="button" th:href="@{/account_bank/calendar}">취소</a>
+                    <a type="button" class="btn btn-secondary" role="button" href="javascript:history.back()">취소</a>
                 </div>
             </div>
         </form>

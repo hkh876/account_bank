@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.example.accountbank.constant.AccountBankConstants.ACCOUNT_BOOK_API;
+
 @Log4j2
 @RestController
-@RequestMapping(value = "/api/v1/account")
+@RequestMapping(ACCOUNT_BOOK_API)
 public class AccountBankRestController {
     private final AccountService accountService;
     private final DateService dateService;

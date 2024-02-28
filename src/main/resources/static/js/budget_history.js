@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const dateStrInput = document.querySelector("#displayDate");
                 dateStrInput.value = value;
 
+                // request
                 const dateToStr = dateToString(tempDate);
                 sendRequest(dateToStr);
             }, 1);
@@ -21,4 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function sendRequest(dateStr) {
     location.href = "?date=" + dateStr;
+}
+
+function onHistoryClick(categoryId) {
+    const dateStr = document.querySelector("#dateStr").value;
+    location.href = "/account_bank/settings/budget_history/detail?categoryId=" + categoryId + "&date=" + dateStr;
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base_layout}">
+<head>
+    <title>예산 상세 내역</title>
+    <link th:href="@{/css/budget.css}" rel="stylesheet">
+</head>
+<body>
+    <th:block layout:fragment="contents">
+        <div class="d-flex flex-column align-items-center justify-content-between px-3 pt-3">
+            <div class="d-flex align-items-center">
+                <img class="budget-category-icon" th:src="@{/images/category/{icon}(icon=${category.categoryIcon})}" alt="category icon">
+                <span class="ms-3" th:text="${category.name}">카테고리 이름</span>
+            </div>
+            <span th:if="${budget}"
+                  th:text="|(예산 ${#numbers.formatInteger(totalMoney, 0, 'COMMA')} / ${#numbers.formatInteger(budget.money, 0, 'COMMA')})|">합산 / 예산</span>
+            <span th:unless="${budget}"
+                  th:text="|(${#numbers.formatInteger(totalMoney, 0, 'COMMA')}원)|">합산</span>
+        </div>
+        <hr/>
+        <th:block th:each="account : ${accounts}">
+            <div class="d-flex align-items-center justify-content-between px-2 pt-2 history-container">
+                <div class="d-flex align-items-center">
+                    <span th:text="${#temporals.format(account.targetDate, '(yyyy/MM/dd)')}">(yyyy/mm/dd)</span>
+                    <img class="history-icon ms-1" th:src="@{/images/target/{icon}(icon=${account.target.targetIcon})}" alt="target icon">
+                    <img class="history-icon ms-1" th:src="@{/images/category/{icon}(icon=${account.category.categoryIcon})}" alt="category icon">
+                    <span class="ms-1" th:text="${account.description}">내역</span>
+                </div>
+                <!-- Fix me : 지출만 -->
+                <span th:text="|-${#numbers.formatInteger(account.money, 0, 'COMMA')}원|">가격</span>
+            </div>
+        </th:block>
+    </th:block>
+</body>
+</html>

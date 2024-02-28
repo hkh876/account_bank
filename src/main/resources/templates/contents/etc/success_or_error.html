@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base_layout}">
+<head>
+    <title>오류 페이지</title>
+</head>
+<body>
+    <th:block layout:fragment="scripts">
+        <script th:inline="javascript">
+            const message = [[${message}]]
+            const url = [[${url}]];
+
+            if (message != null && message.length > 0) {
+                alert(message);
+                history.back();
+            }
+        </script>
+    </th:block>
+</body>
+</html>

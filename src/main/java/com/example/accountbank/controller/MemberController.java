@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
 
+import static com.example.accountbank.constant.AccountBankConstants.*;
+
 @Log4j2
 @Controller
 public class MemberController {
@@ -23,30 +25,30 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/member/login")
+    @GetMapping(MEMBER_LOGIN_URL)
     public String loginView(Principal principal) {
         if (principal != null) {
             return "redirect:/";
         }
 
-        return "contents/login";
+        return CONTENTS_MEMBER_LOGIN_PATH;
     }
 
-    @GetMapping("/member/forget_password")
+    @GetMapping(MEMBER_FORGET_PASSWORD_URL)
     public String forgetPasswordView() {
-        return "contents/forget_password";
+        return CONTENTS_MEMBER_FORGET_PASSWORD_PATH;
     }
 
-    @PostMapping("/member/forget_password")
+    @PostMapping(MEMBER_FORGET_PASSWORD_URL)
     public String forgetPasswordProcess(
         @Valid @ModelAttribute("member") MemberDTO memberDTO,
         BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return "contents/forget_password";
+            return CONTENTS_MEMBER_FORGET_PASSWORD_PATH;
         }
 
         memberService.update(memberDTO);
-        return "redirect:/member/login";
+        return "redirect:" + MEMBER_LOGIN_URL;
     }
 }

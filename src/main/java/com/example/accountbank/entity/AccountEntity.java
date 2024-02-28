@@ -1,5 +1,7 @@
 package com.example.accountbank.entity;
 
+import com.example.accountbank.converter.DivisionConverter;
+import com.example.accountbank.enums.Division;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -16,6 +18,9 @@ public class AccountEntity extends BaseEntity {
     private String description;
     private int money;
     private LocalDateTime targetDate;
+
+    @Convert(converter = DivisionConverter.class)
+    private Division division;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "target_id")

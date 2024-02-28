@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layouts/base_layout}">
 <head>
-    <title>예산 추가</title>
+    <title>예산 관리</title>
     <link th:href="@{/css/budget.css}" rel="stylesheet">
 </head>
 <body>
@@ -26,7 +26,7 @@
             <a th:href="@{/account_bank/settings/budget/detail(id=${budget.id})}">
                 <div class="d-flex align-items-center justify-content-between px-3">
                     <div class="d-flex align-items-center">
-                        <img class="budget-category-icon" th:src="|/images/category/${budget.category.categoryIcon}|" alt="category icon">
+                        <img class="budget-category-icon" th:src="@{/images/category/{icon}(icon=${budget.category.categoryIcon})}" alt="category icon">
                         <span class="ms-3" th:text="${budget.category.name}">카테고리명</span>
                     </div>
                     <span th:text="|${#numbers.formatInteger(budget.money, 0, 'COMMA')}원|">예산</span>

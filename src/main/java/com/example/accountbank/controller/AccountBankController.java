@@ -1,7 +1,13 @@
 package com.example.accountbank.controller;
 
-import com.example.accountbank.dto.*;
-import com.example.accountbank.service.*;
+import com.example.accountbank.dto.AccountDTO;
+import com.example.accountbank.dto.CategoryDTO;
+import com.example.accountbank.dto.TargetDTO;
+import com.example.accountbank.enums.Division;
+import com.example.accountbank.service.AccountService;
+import com.example.accountbank.service.CategoryService;
+import com.example.accountbank.service.DateService;
+import com.example.accountbank.service.TargetService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,17 +17,19 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.accountbank.constant.AccountBankConstants.*;
 
 @Controller
 public class AccountBankController {
     private final AccountService accountService;
     private final TargetService targetService;
     private final CategoryService categoryService;
-    private final BudgetService budgetService;
+
     private final DateService dateService;
 
     @Autowired
@@ -29,22 +37,28 @@ public class AccountBankController {
             AccountService accountService,
             TargetService targetService,
             CategoryService categoryService,
-            BudgetService budgetService,
             DateService dateService)
     {
         this.accountService = accountService;
         this.targetService = targetService;
         this.categoryService = categoryService;
-        this.budgetService = budgetService;
         this.dateService = dateService;
     }
 
     @GetMapping("/")
     public String indexView() {
-        return "redirect:/account_bank/calendar";
+        return "redirect:" + ACCOUNT_BANK_CALENDAR_URL;
     }
 
-    @GetMapping("/account_bank/register")
+    @GetMapping({"/account_bank/success", "/account_bank/error"})
+    public String successOrErrorView(String message, String url, Model model) {
+        model.addAttribute("message", message);
+        model.addAttribute("url", url);
+
+        return "contents/etc/success_or_error";
+    }
+
+    @GetMapping(ACCOUNT_BANK_REGISTER_URL)
     public String registerView(String date, Model model) {
         List<TargetDTO> targets = targetService.findAll();
         List<CategoryDTO> categories = categoryService.findAll();
@@ -57,20 +71,20 @@ public class AccountBankController {
         model.addAttribute("targets", targets);
         model.addAttribute("categories", categories);
 
-        return "contents/account_register";
+        return CONTENTS_ACCOUNT_BOOK_REGISTER_PATH;
     }
 
-    @PostMapping("/account_bank/register")
+    @PostMapping(ACCOUNT_BANK_REGISTER_URL)
     public String registerProcess(
             @Valid @ModelAttribute("account") AccountDTO accountDTO,
             BindingResult bindingResult,
             Model model) {
         if (accountDTO.getTargetId() == null) {
-            bindingResult.addError(new FieldError("account", "targetId", "대상을 선택해 주세요."));
+            bindingResult.addError(new FieldError("account", "targetId", NOT_SELECTED_TARGET_ERROR_MESSAGE));
         }
 
         if (accountDTO.getCategoryId() == null) {
-            bindingResult.addError(new FieldError("account", "categoryId", "카테고리를 선택해 주세요."));
+            bindingResult.addError(new FieldError("account", "categoryId", NOT_SELECTED_CATEGORY_ERROR_MESSAGE));
         }
 
         if (bindingResult.hasErrors()) {
@@ -80,7 +94,7 @@ public class AccountBankController {
             model.addAttribute("targets", targets);
             model.addAttribute("categories", categories);
 
-            return "contents/account_register";
+            return CONTENTS_ACCOUNT_BOOK_REGISTER_PATH;
         }
 
         accountDTO.setTargetDate(dateService.dateStrToLocalDateTime(accountDTO.getDateStr()));
@@ -96,23 +110,30 @@ public class AccountBankController {
         // 데이터 등록
         // Fix me : 현재는 지출만
         int money = accountDTO.getMoney();
-        accountDTO.setMoney(-1 * money);
+        accountDTO.setDivision(Division.EXPENSE);
         accountService.register(accountDTO);
 
-        return "redirect:/account_bank/calendar";
+        return "redirect:" + ACCOUNT_BANK_CALENDAR_URL;
     }
 
-    @GetMapping("/account_bank/calendar")
+    @GetMapping(ACCOUNT_BANK_CALENDAR_URL)
     public String calendarView() {
-        return "contents/calendar";
+        return CONTENTS_ACCOUNT_BOOK_CALENDAR_PATH;
     }
 
-    @GetMapping("/account_bank/detail")
-    public String detailView(Long id, Model model) {
+    @GetMapping(ACCOUNT_BANK_DETAIL_URL)
+    public String detailView(Long id, Model model, RedirectAttributes redirectAttributes) {
+        AccountDTO account = accountService.findById(id);
+        if (account == null) {
+            redirectAttributes.addAttribute("message", NOT_FOUND_DATA_ERROR_MESSAGE);
+            redirectAttributes.addAttribute("url", ACCOUNT_BANK_CALENDAR_URL);
+
+            return "redirect:/account_bank/error";
+        }
+
         List<TargetDTO> targets = targetService.findAll();
         List<CategoryDTO> categories = categoryService.findAll();
 
-        AccountDTO account = accountService.findById(id);
         LocalDateTime targetDate = account.getTargetDate();
         account.setDisplayDate(dateService.dateTimeToDisplayFormat(targetDate));
         account.setDateStr(dateService.dateTimeToDateStr(targetDate));
@@ -124,25 +145,25 @@ public class AccountBankController {
         model.addAttribute("targets", targets);
         model.addAttribute("categories", categories);
 
-        return "contents/account_detail";
+        return CONTENTS_ACCOUNT_BOOK_DETAIL_PATH;
     }
 
-    @PostMapping("/account_bank/detail")
+    @PostMapping(ACCOUNT_BANK_DETAIL_URL)
     public String updateProcess(
         @Valid @ModelAttribute("account") AccountDTO accountDTO,
         BindingResult bindingResult,
-        Model model
-    ) {
+        Model model)
+    {
         if (accountDTO.getMoney() < 0) {
-            bindingResult.addError(new FieldError("account", "money", "잘못된 값 입니다."));
+            bindingResult.addError(new FieldError("account", "money", INVALID_VALUE_ERROR_MESSAGE));
         }
 
         if (accountDTO.getTargetId() == null) {
-            bindingResult.addError(new FieldError("account", "targetId", "대상을 선택해 주세요."));
+            bindingResult.addError(new FieldError("account", "targetId", NOT_SELECTED_TARGET_ERROR_MESSAGE));
         }
 
         if (accountDTO.getCategoryId() == null) {
-            bindingResult.addError(new FieldError("account", "categoryId", "카테고리를 선택해 주세요."));
+            bindingResult.addError(new FieldError("account", "categoryId", NOT_SELECTED_CATEGORY_ERROR_MESSAGE));
         }
 
         if (bindingResult.hasErrors()) {
@@ -152,7 +173,7 @@ public class AccountBankController {
             model.addAttribute("targets", targets);
             model.addAttribute("categories", categories);
 
-            return "contents/account_detail";
+            return CONTENTS_ACCOUNT_BOOK_DETAIL_PATH;
         }
 
         accountDTO.setTargetDate(dateService.dateStrToLocalDateTime(accountDTO.getDateStr()));
@@ -168,136 +189,15 @@ public class AccountBankController {
         // 데이터 수정
         // Fix me : 현재는 지출만
         int money = accountDTO.getMoney();
-        accountDTO.setMoney(-1 * money);
+        accountDTO.setMoney(money);
 
         accountService.update(accountDTO);
-        return "redirect:/account_bank/calendar";
+        return "redirect:" + ACCOUNT_BANK_CALENDAR_URL;
     }
 
-    @GetMapping("/account_bank/delete")
+    @GetMapping(ACCOUNT_BANK_DELETE_URL)
     public String deleteProcess(Long id) {
         accountService.deleteById(id);
-        return "redirect:/account_bank/calendar";
-    }
-
-    @GetMapping("/account_bank/settings")
-    public String settingsView() {
-        return "contents/settings";
-    }
-
-    @GetMapping("/account_bank/settings/budget")
-    public String budgetView(Model model) {
-        List<BudgetDTO> budgets = budgetService.findAll();
-
-        // 총 예산
-        int total = budgets.stream().mapToInt(BudgetDTO::getMoney).sum();
-
-        model.addAttribute("budgets", budgets);
-        model.addAttribute("total", total);
-
-        return "contents/budget";
-    }
-
-    @GetMapping("/account_bank/settings/budget/register")
-    public String budgetRegisterView(Model model) {
-        List<CategoryDTO> categories = categoryService.findAll();
-
-        model.addAttribute("budget", new BudgetDTO());
-        model.addAttribute("categories", categories);
-
-        return "contents/budget_register";
-    }
-
-    @PostMapping("/account_bank/settings/budget/register")
-    public String budgetRegisterProcess(
-        @Valid @ModelAttribute("budget") BudgetDTO budgetDTO,
-        BindingResult bindingResult,
-        Model model
-    ) {
-        Long categoryId = budgetDTO.getCategoryId();
-        if (categoryId == null) {
-            bindingResult.addError(new FieldError("budget", "categoryId", "카테고리를 선택해 주세요."));
-        } else {
-            // 카테고리 설정
-            CategoryDTO category = categoryService.findById(categoryId);
-            budgetDTO.setCategory(category);
-
-            // 중복 체크
-            BudgetDTO budget = budgetService.findByCategory(category);
-            if (budget != null) {
-                bindingResult.addError(new FieldError("budget", "duplicate", "이미 등록된 예산입니다."));
-            }
-        }
-
-        if (bindingResult.hasErrors()) {
-            List<CategoryDTO> categories = categoryService.findAll();
-
-            model.addAttribute("categories", categories);
-            return "contents/budget_register";
-        }
-
-        BudgetDTO newBudget = budgetService.register(budgetDTO);
-        return "redirect:/account_bank/settings/budget";
-    }
-
-    @GetMapping("/account_bank/settings/budget/detail")
-    public String budgetDetailView(Long id, Model model) {
-        BudgetDTO budget = budgetService.findById(id);
-
-        model.addAttribute("budget", budget);
-        return "contents/budget_detail";
-    }
-
-    @PostMapping("/account_bank/settings/budget/detail")
-    public String budgetUpdateProcess(BudgetDTO budgetDTO) {
-        BudgetDTO budget = budgetService.update(budgetDTO);
-        return "redirect:/account_bank/settings/budget";
-    }
-
-    @GetMapping("/account_bank/settings/budget/delete")
-    public String budgetDeleteProcess(Long id) {
-        budgetService.deleteById(id);
-        return "redirect:/account_bank/settings/budget";
-    }
-
-    @GetMapping("/account_bank/settings/budget_history")
-    public String budgetHistoryView(String date, Model model) {
-        if (date == null) {
-            LocalDateTime current = LocalDateTime.now();
-            date = dateService.dateTimeToDateStr(current);
-            model.addAttribute("displayDate", dateService.dateTimeToDisplayFormat(current));
-        } else {
-            model.addAttribute("displayDate", dateService.dateStrToDisplayFormat(date));
-        }
-
-        LocalDateTime startDate = dateService.getStartDateOfMonth(date);
-        LocalDateTime endDate = dateService.getEndDateOfMonth(date);
-        ArrayList<BudgetHistoryDTO> budgetHistories = new ArrayList<>();
-
-        // 가계부 조회
-        List<AccountDTO> accounts = accountService.findAllByTargetDateBetween(startDate, endDate);
-
-        // 카테고리 목록
-        List<CategoryDTO> categories = categoryService.findAll();
-
-        // 예산 목록
-        List<BudgetDTO> budgets = budgetService.findAll();
-
-        categories.forEach(category -> {
-            Long categoryId = category.getId();
-            int totalMoney = accountService.getTotalMoneySameCategory(accounts, categoryId);
-
-            if (totalMoney > 0) {
-                BudgetHistoryDTO budgetHistory = new BudgetHistoryDTO();
-                budgetHistory.setCategory(category);
-                budgetHistory.setTotalMoney(totalMoney);
-                budgetHistory.setBudgetMoney(budgetService.getBudgetMoneyByCategory(budgets, categoryId));
-
-                budgetHistories.add(budgetHistory);
-            }
-        });
-
-        model.addAttribute("budgetHistories", budgetHistories);
-        return "contents/budget_history";
+        return "redirect:" + ACCOUNT_BANK_CALENDAR_URL;
     }
 }

@@ -13,6 +13,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.example.accountbank.constant.AccountBankConstants.NOT_FOUND_DATA_ERROR_MESSAGE;
+
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
@@ -33,7 +35,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryDTO findById(Long id) {
         Optional<CategoryEntity> result = categoryRepository.findById(id);
-        CategoryEntity category = result.orElseThrow(() -> new NoSuchElementException("데이터가 존재 하지 않습니다."));
+        CategoryEntity category = result.orElseThrow(() -> new NoSuchElementException(NOT_FOUND_DATA_ERROR_MESSAGE));
 
         return modelMapper.map(category, CategoryDTO.class);
     }

@@ -50,7 +50,7 @@
                                        th:checked="${category.id == account.categoryId} ? 'true'">
                                 <label class="form-check-label" th:for="|categoryRadio${category.id}|">
                                     <div class="d-flex flex-column align-items-center">
-                                        <img class="category-icon" th:src="@{|/images/category/${category.categoryIcon}|}">
+                                        <img class="category-icon" th:src="@{/images/category/{icon}(icon=${category.categoryIcon})}">
                                         <span th:text="${category.name}">name</span>
                                     </div>
                                 </label>
@@ -62,7 +62,7 @@
                 <hr/>
                 <div>
                     <button type="submit" class="btn btn-success">저장</button>
-                    <a type="button" class="btn btn-secondary" role="button" th:href="@{/account_bank/calendar}">취소</a>
+                    <a type="button" class="btn btn-secondary" role="button" href="javascript:history.back()">취소</a>
                 </div>
             </div>
         </form>

@@ -1,7 +1,9 @@
 package com.example.accountbank.service;
 
 import com.example.accountbank.dto.AccountDTO;
+import com.example.accountbank.dto.CategoryDTO;
 import com.example.accountbank.entity.AccountEntity;
+import com.example.accountbank.entity.CategoryEntity;
 import com.example.accountbank.repository.AccountRepository;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -12,7 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.example.accountbank.constant.AccountBankConstants.NOT_FOUND_DATA_ERROR_MESSAGE;
 
 @Log4j2
 @Service
@@ -35,20 +40,28 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public List<AccountDTO> findAllByTargetDateBetween(LocalDateTime startDate, LocalDateTime endDate) {
-        List<AccountEntity> result = accountRepository.findAllByTargetDateBetween(startDate, endDate);
+    public List<AccountDTO> findAllByTargetDateBetween(LocalDateTime start, LocalDateTime end) {
+        List<AccountEntity> result = accountRepository.findAllByTargetDateBetween(start, end);
+        return result.stream().map(entity -> modelMapper.map(entity, AccountDTO.class)).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<AccountDTO> findAllByCategoryAndTargetDateBetween(CategoryDTO categoryDTO, LocalDateTime start, LocalDateTime end) {
+        CategoryEntity category = modelMapper.map(categoryDTO, CategoryEntity.class);
+        List<AccountEntity> result = accountRepository.findAllByCategoryAndTargetDateBetween(category, start, end);
+
         return result.stream().map(entity -> modelMapper.map(entity, AccountDTO.class)).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public AccountDTO findById(Long id) {
-        AccountEntity result = accountRepository.findById(id).orElseThrow(() -> new NoSuchElementException("데이터가 존재 하지 않습니다."));
-        return modelMapper.map(result, AccountDTO.class);
+        Optional<AccountEntity> result = accountRepository.findById(id);
+        return result.isPresent() ? modelMapper.map(result.get(), AccountDTO.class) : null;
     }
 
     @Transactional
     public AccountDTO update(AccountDTO accountDTO) {
-        AccountEntity entity = accountRepository.findById(accountDTO.getId()).orElseThrow(() -> new NoSuchElementException("데이터가 존재 하지 않습니다."));
+        AccountEntity entity = accountRepository.findById(accountDTO.getId()).orElseThrow(() -> new NoSuchElementException(NOT_FOUND_DATA_ERROR_MESSAGE));
         AccountEntity newAccount = modelMapper.map(accountDTO, AccountEntity.class);
 
         entity.update(newAccount);

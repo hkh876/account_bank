@@ -31,6 +31,8 @@ public class QAccountEntity extends EntityPathBase<AccountEntity> {
 
     public final StringPath description = createString("description");
 
+    public final EnumPath<com.example.accountbank.enums.Division> division = createEnum("division", com.example.accountbank.enums.Division.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final NumberPath<Integer> money = createNumber("money", Integer.class);

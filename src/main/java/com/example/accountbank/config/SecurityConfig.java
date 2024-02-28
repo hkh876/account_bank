@@ -15,6 +15,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
 
+import static com.example.accountbank.constant.AccountBankConstants.MEMBER_LOGIN_URL;
+
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
@@ -63,7 +65,7 @@ public class SecurityConfig {
 
         // Custom login
         http.formLogin((login) -> {
-            login.loginPage("/member/login");
+            login.loginPage(MEMBER_LOGIN_URL);
             login.defaultSuccessUrl("/", true);
             login.usernameParameter("email");
             login.passwordParameter("password");
@@ -72,7 +74,7 @@ public class SecurityConfig {
         // Custom logout
         http.logout((logout) -> {
             logout.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"));
-            logout.logoutSuccessUrl("/member/login");
+            logout.logoutSuccessUrl(MEMBER_LOGIN_URL);
         });
 
         return http.build();

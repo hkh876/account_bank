@@ -8,15 +8,25 @@
 <body>
     <th:block layout:fragment="contents">
         <div class="p-3">
+            <input type="hidden" class="form-control border-0 border-bottom" id="dateStr" th:value="${dateStr}">
             <!-- only display -->
             <div class="mb-3">
                 <input type="text" class="form-control border-0 border-bottom" id="displayDate" th:value="${displayDate}" readonly>
             </div>
         </div>
+        <div class="d-flex align-items-center justify-content-between px-3">
+            <div class="d-flex align-items-center">
+                <img class="budget-category-icon" th:src="@{/images/settings/all_budget_icon.png}" alt="all budget icon">
+                <span class="ms-3">전체</span>
+            </div>
+            <span th:text="|(예산 ${#numbers.formatInteger(accountTotalMoney, 0, 'COMMA')} / ${#numbers.formatInteger(budgetTotalMoney, 0, 'COMMA')})|">총 예산</span>
+        </div>
+        <hr/>
         <th:block th:each="history : ${budgetHistories}">
-            <div class="d-flex align-items-center justify-content-between px-3 py-3">
+            <div class="d-flex align-items-center justify-content-between px-3 pt-2"
+                th:categoryId="${history.category.id}" th:onclick="onHistoryClick(this.getAttribute('categoryId'))">
                 <div class="d-flex align-items-center">
-                    <img class="budget-category-icon" th:src="|/images/category/${history.category.categoryIcon}|" alt="all budget icon">
+                    <img class="budget-category-icon" th:src="@{/images/category/{icon}(icon=${history.category.categoryIcon})}" alt="category icon">
                     <span class="ms-3" th:text="${history.category.name}">카테고리 이름</span>
                 </div>
                 <span th:if="${history.budgetMoney > 0}"

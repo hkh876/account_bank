@@ -29,7 +29,9 @@ function makeItemContainer(eventData) {
             descriptionDiv.textContent = value.description;
             const moneySpan = document.createElement("span");
             moneySpan.classList.add("money-text");
-            moneySpan.textContent = value.money.toLocaleString() + "원";
+
+            let money = value.division === "EXPENSE" ? -1 * value.money : value.money;
+            moneySpan.textContent = money.toLocaleString() + "원";
 
             div.append(targetIcon, categoryIcon, categoryNameSpan, descriptionDiv, moneySpan);
             root.appendChild(div);
@@ -45,7 +47,7 @@ function removeAllEvents(calendar) {
 }
 
 function sendRequest(dateStr, calendar) {
-    fetch("/api/v1/account?date=" + dateStr)
+    fetch("/api/v1/account_book?date=" + dateStr)
     .then(response => response.json())
     .then(response => {
         const dataList = response;
@@ -53,12 +55,13 @@ function sendRequest(dateStr, calendar) {
         // initialize
         removeAllEvents(calendar);
         eventData = {};
+        let totalMoney = 0;
 
         dataList.forEach(data => {
             // money to title
             const tempDate = new Date(data["targetDate"]);
             const tempStart = dateToString(tempDate);
-            const money = data["money"];
+            const money = data["division"] === "EXPENSE" ? -1 * data["money"] : data["money"];
 
             if (tempStart in eventData) {
                 // 값이 있다면
@@ -73,6 +76,7 @@ function sendRequest(dateStr, calendar) {
             }
 
             eventData[tempStart].data.push(data);
+            totalMoney += parseInt(money);
         });
 
         for (key in eventData) {
@@ -83,6 +87,10 @@ function sendRequest(dateStr, calendar) {
                 borderColor: "lightskyblue",
             });
         }
+
+        // 총 지출
+        const totalMoneyText = document.querySelector("#totalMoney");
+        totalMoneyText.textContent = totalMoney.toLocaleString() + "원";
 
         const initialDate = dateToString(calendar.getDate());
         makeItemContainer(eventData[initialDate]);

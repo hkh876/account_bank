@@ -8,6 +8,15 @@
     width: 48px;
 }
 
+.history-icon {
+    width: 36px;
+}
+
+.history-container > div > span,
+.history-container > span {
+    font-size: 24px;
+}
+
 /* register */
 .form-check {
     padding-left: 0;
@@ -33,5 +42,26 @@
     .budget-category-icon,
     .target-icon {
         width: 36px;
+    }
+
+    .history-container > div > span,
+    .history-container > span {
+        font-size: 1rem;
+    }
+
+    .history-icon {
+        width: 24px;
+    }
+}
+
+/* Galaxy Note 10+ */
+@media (412px <= width < 820px) {
+    .history-container > div > span,
+    .history-container > span {
+        font-size: 1rem;
+    }
+
+    .history-icon {
+        width: 24px;
     }
 }

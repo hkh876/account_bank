@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 
+import static com.example.accountbank.constant.AccountBankConstants.NOT_FOUND_DATA_ERROR_MESSAGE;
+
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
@@ -22,7 +24,7 @@ public class MemberService {
 
     public void update(MemberDTO memberDTO) {
         MemberEntity member = memberRepository.findByEmail(memberDTO.getEmail())
-                .orElseThrow(() -> new NoSuchElementException("데이터가 존재 하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(NOT_FOUND_DATA_ERROR_MESSAGE));
         String password = passwordEncoder.encode(memberDTO.getPassword());
 
         member.changePassword(password);

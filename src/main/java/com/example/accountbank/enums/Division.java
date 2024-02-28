@@ -8,20 +8,21 @@ import java.util.NoSuchElementException;
 import static com.example.accountbank.constant.AccountBankConstants.NOT_FOUND_DATA_ERROR_MESSAGE;
 
 @Getter
-public enum MemberRole {
-    USER(1, "ROLE_USER");
+public enum Division {
+    DEPOSIT(1, "입금"),
+    EXPENSE(2, "지출");
 
     private int code;
-    private String role;
+    private String displayName;
 
-    MemberRole(int code, String role) {
+    Division(int code, String displayName) {
         this.code = code;
-        this.role = role;
+        this.displayName = displayName;
     }
 
-    public static MemberRole ofRole(String dbData) {
-        return Arrays.stream(MemberRole.values())
-                .filter(value -> value.getRole().equals(dbData))
+    public static Division ofCode(int code) {
+        return Arrays.stream(Division.values())
+                .filter(value -> value.getCode() == code)
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException(NOT_FOUND_DATA_ERROR_MESSAGE));
     }

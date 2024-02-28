@@ -1,6 +1,7 @@
 package com.example.accountbank.service;
 
 import com.example.accountbank.dto.AccountDTO;
+import com.example.accountbank.dto.CategoryDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,9 @@ public class AccountServiceTest {
     @Autowired
     private DateService dateService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @Test
     @DisplayName(value = "날짜에 따른 데이터 조회 서비스 테스트")
     public void findAllByTargetDateBetweenTest() {
@@ -29,6 +33,24 @@ public class AccountServiceTest {
 
         // When
         List<AccountDTO> result = accountService.findAllByTargetDateBetween(start, end);
+
+        // Then
+        log.info(result);
+    }
+
+    @Test
+    @DisplayName(value = "날짜와 카테고리에 따른 데이터 조회 서비스 테스트")
+    public void findAllByCategoryAndTargetDateBetweenTest() {
+        // Given
+        Long categoryId = 1L;
+        CategoryDTO category = categoryService.findById(categoryId);
+
+        String date = "2023-12-01";
+        LocalDateTime start = dateService.getStartDateOfMonth(date);
+        LocalDateTime end = dateService.getEndDateOfMonth(date);
+
+        // When
+        List<AccountDTO> result = accountService.findAllByCategoryAndTargetDateBetween(category, start, end);
 
         // Then
         log.info(result);
@@ -49,4 +71,6 @@ public class AccountServiceTest {
         // Then
         log.info(totalMoney);
     }
+
+
 }

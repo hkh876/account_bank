@@ -24,7 +24,7 @@ public class BudgetServiceTest {
         Long categoryId = 1L;
 
         // When
-        int budgetMoney = service.getBudgetMoneyByCategory(budgets, categoryId);
+        int budgetMoney = service.getMoneyByCategory(budgets, categoryId);
 
         // Then
         if (categoryId == 1L) {

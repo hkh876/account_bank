@@ -14,6 +14,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.example.accountbank.constant.AccountBankConstants.NOT_FOUND_DATA_ERROR_MESSAGE;
+
 @Service
 public class BudgetService {
     private final BudgetRepository budgetRepository;
@@ -35,17 +37,13 @@ public class BudgetService {
         CategoryEntity categoryEntity = modelMapper.map(categoryDTO, CategoryEntity.class);
         Optional<BudgetEntity> result = budgetRepository.findByCategory(categoryEntity);
 
-        if (!result.isPresent()) {
-            return null;
-        }
-
-        return modelMapper.map(result.get(), BudgetDTO.class);
+        return result.isPresent() ? modelMapper.map(result.get(), BudgetDTO.class) : null;
     }
 
     @Transactional(readOnly = true)
     public BudgetDTO findById(Long id) {
-        BudgetEntity result = budgetRepository.findById(id).orElseThrow(() -> new NoSuchElementException("데이터가 존재 하지 않습니다."));
-        return modelMapper.map(result, BudgetDTO.class);
+        Optional<BudgetEntity> result = budgetRepository.findById(id);
+        return result.isPresent() ? modelMapper.map(result.get(), BudgetDTO.class) : null;
     }
 
     @Transactional
@@ -58,7 +56,7 @@ public class BudgetService {
 
     @Transactional
     public BudgetDTO update(BudgetDTO budgetDTO) {
-        BudgetEntity entity = budgetRepository.findById(budgetDTO.getId()).orElseThrow(() -> new NoSuchElementException("데이터가 존재 하지 않습니다."));
+        BudgetEntity entity = budgetRepository.findById(budgetDTO.getId()).orElseThrow(() -> new NoSuchElementException(NOT_FOUND_DATA_ERROR_MESSAGE));
         BudgetEntity newBudget = modelMapper.map(budgetDTO, BudgetEntity.class);
 
         entity.update(newBudget);
@@ -72,11 +70,15 @@ public class BudgetService {
         budgetRepository.deleteById(id);
     }
 
-    public int getBudgetMoneyByCategory(List<BudgetDTO> budgets, Long categoryId) {
+    public int getMoneyByCategory(List<BudgetDTO> budgets, Long categoryId) {
         return budgets.stream()
                 .filter(dto -> dto.getCategory().getId() == categoryId)
                 .mapToInt(dto -> dto.getMoney())
                 .findAny()
                 .orElse(0);
+    }
+
+    public int getTotalMoney(List<BudgetDTO> budgets) {
+        return budgets.stream().mapToInt(dto -> dto.getMoney()).sum();
     }
 }

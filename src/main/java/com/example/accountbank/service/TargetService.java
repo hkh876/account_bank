@@ -13,6 +13,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.example.accountbank.constant.AccountBankConstants.NOT_FOUND_DATA_ERROR_MESSAGE;
+
 @Service
 public class TargetService {
     private final TargetRepository targetRepository;
@@ -33,7 +35,7 @@ public class TargetService {
     @Transactional(readOnly = true)
     public TargetDTO findById(Long id) {
         Optional<TargetEntity> result =  targetRepository.findById(id);
-        TargetEntity target = result.orElseThrow(() -> new NoSuchElementException("데이터가 존재 하지 않습니다."));
+        TargetEntity target = result.orElseThrow(() -> new NoSuchElementException(NOT_FOUND_DATA_ERROR_MESSAGE));
 
         return modelMapper.map(target, TargetDTO.class);
     }
