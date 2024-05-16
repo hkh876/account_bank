@@ -19,6 +19,14 @@ a:hover {
     color: black;
 }
 
+table > tbody > tr {
+    vertical-align: middle;
+}
+
 .h-100vh {
     height: calc(var(--vh, 1vh) * 100);
+}
+
+.w-40p {
+    width: 40%;
 }

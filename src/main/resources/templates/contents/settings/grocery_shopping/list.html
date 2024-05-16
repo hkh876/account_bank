@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base_layout}">
+<head>
+    <title>장보기</title>
+</head>
+<body>
+    <th:block layout:fragment="contents">
+        <div class="d-flex align-items-center justify-content-center pt-3 px-3">
+            <span class="fs-1 fw-bold">장보기</span>
+        </div>
+        <div class="mt-3 px-3">
+            <form id="searchForm">
+                <div class="d-flex">
+                    <a type="button" class="btn btn-dark" role="button" th:href="@{/account_bank/settings/grocery_shopping/register}">생성</a>
+                    <input type="text" class="form-control ms-auto w-40p" name="keyword" placeholder="검색어 입력">
+                    <button type="submit" class="btn btn-light ms-1">검색</button>
+                </div>
+            </form>
+            <table class="table mt-3">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">수정일</th>
+                        <th scope="col">생성일</th>
+                        <td scope="col"></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="shopping, status : ${shoppings}">
+                        <td th:text="${status.count}">1</td>
+                        <td th:text="${#temporals.format(shopping.updatedAt, 'yy-MM-dd')}">수정일</td>
+                        <td th:text="${#temporals.format(shopping.createdAt, 'yy-MM-dd')}">생성일</td>
+                        <td>
+                            <a type="button" class="btn btn-primary" role="button"
+                               th:href="@{/account_bank/settings/grocery_shopping/detail(id=${shopping.id})}">보기</a>
+                            <button type="button" class="btn btn-danger" th:shoppingId="${shopping.id}"
+                                th:onclick="onDeleteClick(this.getAttribute('shoppingId'))">삭제</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+    <th:block layout:fragment="scripts">
+        <script th:src="@{/js/grocery_shopping_list.js}"></script>
+    </th:block>
+</body>
+</html>

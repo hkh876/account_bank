@@ -71,7 +71,7 @@ public class AccountBankController {
         model.addAttribute("targets", targets);
         model.addAttribute("categories", categories);
 
-        return CONTENTS_ACCOUNT_BOOK_REGISTER_PATH;
+        return CONTENTS_ACCOUNT_BANK_REGISTER_PATH;
     }
 
     @PostMapping(ACCOUNT_BANK_REGISTER_URL)
@@ -94,7 +94,7 @@ public class AccountBankController {
             model.addAttribute("targets", targets);
             model.addAttribute("categories", categories);
 
-            return CONTENTS_ACCOUNT_BOOK_REGISTER_PATH;
+            return CONTENTS_ACCOUNT_BANK_REGISTER_PATH;
         }
 
         accountDTO.setTargetDate(dateService.dateStrToLocalDateTime(accountDTO.getDateStr()));
@@ -118,7 +118,7 @@ public class AccountBankController {
 
     @GetMapping(ACCOUNT_BANK_CALENDAR_URL)
     public String calendarView() {
-        return CONTENTS_ACCOUNT_BOOK_CALENDAR_PATH;
+        return CONTENTS_ACCOUNT_BANK_CALENDAR_PATH;
     }
 
     @GetMapping(ACCOUNT_BANK_DETAIL_URL)
@@ -145,7 +145,7 @@ public class AccountBankController {
         model.addAttribute("targets", targets);
         model.addAttribute("categories", categories);
 
-        return CONTENTS_ACCOUNT_BOOK_DETAIL_PATH;
+        return CONTENTS_ACCOUNT_BANK_DETAIL_PATH;
     }
 
     @PostMapping(ACCOUNT_BANK_DETAIL_URL)
@@ -173,7 +173,7 @@ public class AccountBankController {
             model.addAttribute("targets", targets);
             model.addAttribute("categories", categories);
 
-            return CONTENTS_ACCOUNT_BOOK_DETAIL_PATH;
+            return CONTENTS_ACCOUNT_BANK_DETAIL_PATH;
         }
 
         accountDTO.setTargetDate(dateService.dateStrToLocalDateTime(accountDTO.getDateStr()));

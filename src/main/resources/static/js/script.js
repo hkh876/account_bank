@@ -21,6 +21,41 @@ function dateToString(date) {
     return year + "-" + month + "-" + day;
 }
 
+function onMoneyKeyUp(element) {
+    const value = Number(element.value);
+    element.value = (isNaN(value)) ? 0 : value;
+}
+
+async function sendRequest(url, method, data) {
+    let response;
+
+    if (method === "GET") {
+        response = await fetch(
+            url,
+            {
+                method: method,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+    } else {
+        const body = JSON.stringify(data);
+        response = await fetch(
+            url,
+            {
+                method: method,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: body
+            }
+        );
+    }
+
+    return response;
+}
+
 function setScreenSize() {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty("--vh", `${vh}px`);

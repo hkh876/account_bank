@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base_layout}">
+<head>
+    <title>장보기 등록</title>
+    <link th:href="@{/css/shopping.css}" rel="stylesheet">
+</head>
+<body>
+    <th:block layout:fragment="contents">
+        <form method="post" id="registerForm">
+            <div class="p-3">
+                <table id="shoppingTable" class="table table-bordered">
+                    <thead>
+                        <tr class="text-center">
+                            <th scope="col">항목</th>
+                            <th scope="col">시장</th>
+                            <th scope="col">마트</th>
+                            <th scope="col">쿠팡</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4" class="text-center" onclick="addRow()">
+                                <img class="add-icon" th:src="@{/images/settings/add_icon.png}" alt="add icon">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex">
+                    <button type="button" class="btn btn-danger ms-auto" onclick="onDeleteClick()">삭제</button>
+                    <button type="button" class="btn btn-success ms-1" onclick="onSaveClick()">저장</button>
+                    <a type="button" class="btn btn-secondary ms-1" onclick="javascript:history.back()">취소</a>
+                </div>
+            </div>
+        </form>
+    </th:block>
+
+    <th:block layout:fragment="scripts">
+        <script th:src="@{/js/grocery_shopping_register.js}"></script>
+    </th:block>
+</body>
+</html>

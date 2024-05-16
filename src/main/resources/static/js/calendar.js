@@ -47,7 +47,7 @@ function removeAllEvents(calendar) {
 }
 
 function sendRequest(dateStr, calendar) {
-    fetch("/api/v1/account_book?date=" + dateStr)
+    fetch("/api/v1/account_bank?date=" + dateStr)
     .then(response => response.json())
     .then(response => {
         const dataList = response;

@@ -1,13 +1,7 @@
 package com.example.accountbank.controller;
 
-import com.example.accountbank.dto.AccountDTO;
-import com.example.accountbank.dto.BudgetDTO;
-import com.example.accountbank.dto.BudgetHistoryDTO;
-import com.example.accountbank.dto.CategoryDTO;
-import com.example.accountbank.service.AccountService;
-import com.example.accountbank.service.BudgetService;
-import com.example.accountbank.service.CategoryService;
-import com.example.accountbank.service.DateService;
+import com.example.accountbank.dto.*;
+import com.example.accountbank.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,21 +24,25 @@ import static com.example.accountbank.constant.AccountBankConstants.*;
 public class SettingsController {
     private final BudgetService budgetService;
     private final CategoryService categoryService;
-    private final DateService dateService;
     private final AccountService accountService;
+    private final DateService dateService;
+    private final ShoppingService shoppingService;
 
     @Autowired
     public SettingsController(
             BudgetService budgetService,
             CategoryService categoryService,
+            AccountService accountService,
             DateService dateService,
-            AccountService accountService)
+            ShoppingService shoppingService)
     {
         this.budgetService = budgetService;
         this.categoryService = categoryService;
-        this.dateService = dateService;
         this.accountService = accountService;
+        this.shoppingService = shoppingService;
+        this.dateService = dateService;
     }
+
     @GetMapping(SETTINGS_URL)
     public String settingsView() {
         return CONTENTS_SETTINGS_LIST_PATH;
@@ -203,5 +201,26 @@ public class SettingsController {
         model.addAttribute("totalMoney", totalMoney);
 
         return CONTENTS_BUDGET_HISTORY_DETAIL_PATH;
+    }
+
+    @GetMapping(SETTINGS_GROCERY_SHOPPING_URL)
+    public String groceryShoppingView(Model model) {
+        List<ShoppingDTO> shoppings = shoppingService.findAll();
+
+        model.addAttribute("shoppings", shoppings);
+        return CONTENTS_GROCERY_SHOPPING_LIST_PATH;
+    }
+
+    @GetMapping(SETTINGS_GROCERY_SHOPPING_REGISTER_URL)
+    public String groceryShoppingRegisterView() {
+        return CONTENTS_GROCERY_SHOPPING_REGISTER_PATH;
+    }
+
+    @GetMapping(SETTINGS_GROCERY_SHOPPING_DETAIL_URL)
+    public String groceryShoppingDetailView(Long id, Model model) {
+        ShoppingDTO shopping = shoppingService.findById(id);
+
+        model.addAttribute("shopping", shopping);
+        return CONTENTS_GROCERY_SHOPPING_DETAIL_PATH;
     }
 }

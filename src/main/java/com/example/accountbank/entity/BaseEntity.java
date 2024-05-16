@@ -20,4 +20,9 @@ public class BaseEntity {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    // for update
+    public void update(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
