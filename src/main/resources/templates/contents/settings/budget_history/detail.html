@@ -19,7 +19,8 @@
         </div>
         <hr/>
         <th:block th:each="account : ${accounts}">
-            <div class="d-flex align-items-center justify-content-between px-2 pt-2 history-container">
+            <div class="d-flex align-items-center justify-content-between px-2 pt-2 history-container" th:accountId="${account.id}"
+                 th:onclick="onHistoryDetailItemClick(this.getAttribute('accountId'))">
                 <div class="d-flex align-items-center">
                     <span th:text="${#temporals.format(account.targetDate, '(yyyy/MM/dd)')}">(yyyy/mm/dd)</span>
                     <img class="history-icon ms-1" th:src="@{/images/target/{icon}(icon=${account.target.targetIcon})}" alt="target icon">
@@ -30,6 +31,9 @@
                 <span th:text="|-${#numbers.formatInteger(account.money, 0, 'COMMA')}원|">가격</span>
             </div>
         </th:block>
+    </th:block>
+    <th:block layout:fragment="scripts">
+        <script th:src="@{/js/budget_history_detail.js}"></script>
     </th:block>
 </body>
 </html>

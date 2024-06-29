@@ -28,4 +28,7 @@ public class AccountDTO {
     private String displayDate;
     private Long targetId;
     private Long categoryId;
+
+    // redirect
+    private String redirectUrl;
 }

@@ -152,7 +152,8 @@ public class AccountBankController {
     public String updateProcess(
         @Valid @ModelAttribute("account") AccountDTO accountDTO,
         BindingResult bindingResult,
-        Model model)
+        Model model,
+        RedirectAttributes redirectAttributes)
     {
         if (accountDTO.getMoney() < 0) {
             bindingResult.addError(new FieldError("account", "money", INVALID_VALUE_ERROR_MESSAGE));
@@ -190,9 +191,10 @@ public class AccountBankController {
         // Fix me : 현재는 지출만
         int money = accountDTO.getMoney();
         accountDTO.setMoney(money);
-
         accountService.update(accountDTO);
-        return "redirect:" + ACCOUNT_BANK_CALENDAR_URL;
+
+        redirectAttributes.addAttribute("message", UPDATE_SUCCESS_MESSAGE);
+        return "redirect:/account_bank/success";
     }
 
     @GetMapping(ACCOUNT_BANK_DELETE_URL)

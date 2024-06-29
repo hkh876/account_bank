@@ -12,7 +12,13 @@
 
             if (message != null && message.length > 0) {
                 alert(message);
-                history.back();
+            }
+
+            if (url != null && url.length > 0) {
+                location.replace(url);
+            } else {
+                // Fix me : 얼마나 뒤로 가기
+                history.go(-2);
             }
         </script>
     </th:block>

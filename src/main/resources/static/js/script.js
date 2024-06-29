@@ -64,3 +64,10 @@ function setScreenSize() {
 setScreenSize();
 window.addEventListener("resize", setScreenSize);
 
+// for 사파리 refresh
+window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+        location.reload();
+    }
+});
+

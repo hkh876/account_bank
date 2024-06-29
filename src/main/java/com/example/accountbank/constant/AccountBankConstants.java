@@ -84,6 +84,7 @@ public class AccountBankConstants {
         Message
      */
     public static final String REGISTER_SUCCESS_MESSAGE = "성공적으로 등록 하였습니다.";
+    public static final String UPDATE_SUCCESS_MESSAGE = "성공적으로 수정 하였습니다.";
     public static final String NOT_SELECTED_TARGET_ERROR_MESSAGE = "대상을 선택해 주세요.";
     public static final String NOT_SELECTED_CATEGORY_ERROR_MESSAGE = "카테고리를 선택해 주세요.";
     public static final String INVALID_VALUE_ERROR_MESSAGE = "잘못된 값 입니다.";
