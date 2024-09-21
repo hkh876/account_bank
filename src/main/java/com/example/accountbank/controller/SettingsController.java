@@ -1,9 +1,12 @@
 package com.example.accountbank.controller;
 
+import com.example.accountbank.custom.CustomMember;
 import com.example.accountbank.dto.*;
+import com.example.accountbank.entity.MemberEntity;
 import com.example.accountbank.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,8 +52,8 @@ public class SettingsController {
     }
 
     @GetMapping(SETTINGS_BUDGET_URL)
-    public String budgetView(Model model) {
-        List<BudgetDTO> budgets = budgetService.findAll();
+    public String budgetView(@AuthenticationPrincipal CustomMember member, Model model) {
+        List<BudgetDTO> budgets = budgetService.findAllByMember(member.getMember());
 
         // 총 예산
         int total = budgets.stream().mapToInt(BudgetDTO::getMoney).sum();
@@ -73,10 +76,12 @@ public class SettingsController {
 
     @PostMapping(SETTINGS_BUDGET_REGISTER_URL)
     public String budgetRegisterProcess(
+            @AuthenticationPrincipal CustomMember member,
             @Valid @ModelAttribute("budget") BudgetDTO budgetDTO,
             BindingResult bindingResult,
             Model model)
     {
+        MemberEntity memberEntity = member.getMember();
         Long categoryId = budgetDTO.getCategoryId();
         if (categoryId == null) {
             bindingResult.addError(new FieldError("budget", "categoryId", NOT_SELECTED_CATEGORY_ERROR_MESSAGE));
@@ -86,7 +91,7 @@ public class SettingsController {
             budgetDTO.setCategory(category);
 
             // 중복 체크
-            BudgetDTO budget = budgetService.findByCategory(category);
+            BudgetDTO budget = budgetService.findByCategory(category, memberEntity);
             if (budget != null) {
                 bindingResult.addError(new FieldError("budget", "duplicate", DUPLICATED_BUDGET_ERROR_MESSAGE));
             }
@@ -99,7 +104,7 @@ public class SettingsController {
             return CONTENTS_BUDGET_REGISTER_PATH;
         }
 
-        BudgetDTO newBudget = budgetService.register(budgetDTO);
+        BudgetDTO newBudget = budgetService.register(memberEntity, budgetDTO);
         return "redirect:" + SETTINGS_BUDGET_URL;
     }
 
@@ -130,7 +135,7 @@ public class SettingsController {
     }
 
     @GetMapping(SETTINGS_BUDGET_HISTORY_URL)
-    public String budgetHistoryView(String date, Model model) {
+    public String budgetHistoryView(@AuthenticationPrincipal CustomMember member, String date, Model model) {
         if (date == null) {
             LocalDateTime current = LocalDateTime.now();
             date = dateService.dateTimeToDateStr(current);
@@ -146,13 +151,13 @@ public class SettingsController {
         ArrayList<BudgetHistoryDTO> budgetHistories = new ArrayList<>();
 
         // 가계부 조회
-        List<AccountDTO> accounts = accountService.findAllByTargetDateBetween(startDate, endDate);
+        List<AccountDTO> accounts = accountService.findAllByMemberAndTargetDateBetween(member.getMember(), startDate, endDate);
 
         // 카테고리 목록
         List<CategoryDTO> categories = categoryService.findAll();
 
         // 예산 목록
-        List<BudgetDTO> budgets = budgetService.findAll();
+        List<BudgetDTO> budgets = budgetService.findAllByMember(member.getMember());
 
         // 전체
         AtomicInteger accountTotalMoney = new AtomicInteger();
@@ -181,18 +186,20 @@ public class SettingsController {
     }
 
     @GetMapping(SETTINGS_BUDGET_HISTORY_DETAIL_URL)
-    public String budgetHistoryDetailView(Long categoryId, String date, Model model) {
+    public String budgetHistoryDetailView(@AuthenticationPrincipal CustomMember member, Long categoryId, String date, Model model) {
+        MemberEntity memberEntity = member.getMember();
+
         // 카테고리 조회
         CategoryDTO category = categoryService.findById(categoryId);
 
         // 예산 조회
-        BudgetDTO budget = budgetService.findByCategory(category);
+        BudgetDTO budget = budgetService.findByCategory(category, memberEntity);
 
         // 날짜
         LocalDateTime start = dateService.getStartDateOfMonth(date);
         LocalDateTime end = dateService.getEndDateOfMonth(date);
 
-        List<AccountDTO> accounts = accountService.findAllByCategoryAndTargetDateBetween(category, start, end);
+        List<AccountDTO> accounts = accountService.findAllByMemberAndCategoryAndTargetDateBetween(memberEntity, category, start, end);
         int totalMoney = accountService.getTotalMoneySameCategory(accounts, categoryId);
 
         model.addAttribute("accounts", accounts);

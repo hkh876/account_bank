@@ -31,6 +31,8 @@ public class QBudgetEntity extends EntityPathBase<BudgetEntity> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final QMemberEntity member;
+
     public final NumberPath<Integer> money = createNumber("money", Integer.class);
 
     //inherited
@@ -55,6 +57,7 @@ public class QBudgetEntity extends EntityPathBase<BudgetEntity> {
     public QBudgetEntity(Class<? extends BudgetEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.category = inits.isInitialized("category") ? new QCategoryEntity(forProperty("category")) : null;
+        this.member = inits.isInitialized("member") ? new QMemberEntity(forProperty("member")) : null;
     }
 
 }

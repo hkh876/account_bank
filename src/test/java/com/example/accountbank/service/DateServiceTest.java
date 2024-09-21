@@ -18,7 +18,7 @@ public class DateServiceTest {
     @DisplayName(value = "입력 날짜 문자열 변환 서비스 테스트")
     public void stringDateToLocalDateTimeServiceTest() {
         // Given
-        String input = "2023년 12월 12일(화)";
+        String input = "2023-12-12";
 
         // When
         LocalDateTime localDateTime = service.dateStrToLocalDateTime(input);

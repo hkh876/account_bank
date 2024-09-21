@@ -1,5 +1,6 @@
 package com.example.accountbank.controller;
 
+import com.example.accountbank.custom.CustomMember;
 import com.example.accountbank.dto.AccountDTO;
 import com.example.accountbank.dto.ShoppingDTO;
 import com.example.accountbank.dto.json.ShoppingItemJsonDTO;
@@ -11,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -34,11 +36,11 @@ public class AccountBankRestController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<AccountDTO>> getAllAccount(String date) {
+    public ResponseEntity<List<AccountDTO>> getAllAccount(@AuthenticationPrincipal CustomMember member, String date) {
         // 시작, 끝 날짜 구하기
         LocalDateTime start = dateService.getStartDateOfMonth(date);
         LocalDateTime end = dateService.getEndDateOfMonth(date);
-        List<AccountDTO> accounts = accountService.findAllByTargetDateBetween(start, end);
+        List<AccountDTO> accounts = accountService.findAllByMemberAndTargetDateBetween(member.getMember(), start, end);
 
         return ResponseEntity.status(HttpStatus.OK).body(accounts);
     }

@@ -35,6 +35,8 @@ public class QAccountEntity extends EntityPathBase<AccountEntity> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final QMemberEntity member;
+
     public final NumberPath<Integer> money = createNumber("money", Integer.class);
 
     public final QTargetEntity target;
@@ -63,6 +65,7 @@ public class QAccountEntity extends EntityPathBase<AccountEntity> {
     public QAccountEntity(Class<? extends AccountEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.category = inits.isInitialized("category") ? new QCategoryEntity(forProperty("category")) : null;
+        this.member = inits.isInitialized("member") ? new QMemberEntity(forProperty("member")) : null;
         this.target = inits.isInitialized("target") ? new QTargetEntity(forProperty("target")) : null;
     }
 

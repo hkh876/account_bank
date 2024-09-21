@@ -2,6 +2,7 @@ package com.example.accountbank.service;
 
 import com.example.accountbank.dto.AccountDTO;
 import com.example.accountbank.dto.CategoryDTO;
+import com.example.accountbank.entity.MemberEntity;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,7 @@ public class AccountServiceTest {
         // Given
         Long categoryId = 1L;
         CategoryDTO category = categoryService.findById(categoryId);
+        MemberEntity member = new MemberEntity();
 
         String date = "2023-12-01";
         LocalDateTime start = dateService.getStartDateOfMonth(date);

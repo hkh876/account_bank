@@ -3,11 +3,14 @@ package com.example.accountbank.entity;
 import com.example.accountbank.converter.MemberRoleConverter;
 import com.example.accountbank.enums.MemberRole;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "member_tbl")
 @Getter
+@NoArgsConstructor
 public class MemberEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +25,12 @@ public class MemberEntity extends BaseEntity {
 
     @Convert(converter = MemberRoleConverter.class)
     private MemberRole role;
+
+    // For test
+    @Builder
+    public MemberEntity(Long id) {
+        this.id = id;
+    }
 
     public void changePassword(String password) {
         if (!this.password.equals(password)) {

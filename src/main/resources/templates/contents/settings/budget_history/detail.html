@@ -19,16 +19,16 @@
         </div>
         <hr/>
         <th:block th:each="account : ${accounts}">
-            <div class="d-flex align-items-center justify-content-between px-2 pt-2 history-container" th:accountId="${account.id}"
+            <div class="px-2 pt-2 history-container" th:accountId="${account.id}"
                  th:onclick="onHistoryDetailItemClick(this.getAttribute('accountId'))">
+                <span th:text="${#temporals.format(account.targetDate, '(yyyy/MM/dd)')}">(yyyy/mm/dd)</span>
                 <div class="d-flex align-items-center">
-                    <span th:text="${#temporals.format(account.targetDate, '(yyyy/MM/dd)')}">(yyyy/mm/dd)</span>
                     <img class="history-icon ms-1" th:src="@{/images/target/{icon}(icon=${account.target.targetIcon})}" alt="target icon">
                     <img class="history-icon ms-1" th:src="@{/images/category/{icon}(icon=${account.category.categoryIcon})}" alt="category icon">
-                    <span class="ms-1" th:text="${account.description}">내역</span>
+                    <!-- Fix me : 지출만 -->
+                    <span class="ms-auto" th:text="|-${#numbers.formatInteger(account.money, 0, 'COMMA')}원|">가격</span>
                 </div>
-                <!-- Fix me : 지출만 -->
-                <span th:text="|-${#numbers.formatInteger(account.money, 0, 'COMMA')}원|">가격</span>
+                <span class="mt-2" th:text="${account.description}">내역</span>
             </div>
         </th:block>
     </th:block>

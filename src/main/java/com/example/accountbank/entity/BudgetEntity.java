@@ -20,6 +20,10 @@ public class BudgetEntity extends BaseEntity {
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private MemberEntity member;
+
     public void update(BudgetEntity budget) {
         int money = budget.getMoney();
 

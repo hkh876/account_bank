@@ -21,6 +21,7 @@ public class AccountDTO {
     private TargetDTO target;
     private CategoryDTO category;
     private Division division;
+    private MemberDTO member;
 
     // Custom
     @NotBlank(message = INPUT_DATE_EMPTY_ERROR_MESSAGE)

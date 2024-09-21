@@ -2,8 +2,10 @@ package com.example.accountbank.service;
 
 import com.example.accountbank.dto.BudgetDTO;
 import com.example.accountbank.dto.CategoryDTO;
+import com.example.accountbank.dto.MemberDTO;
 import com.example.accountbank.entity.BudgetEntity;
 import com.example.accountbank.entity.CategoryEntity;
+import com.example.accountbank.entity.MemberEntity;
 import com.example.accountbank.repository.BudgetRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -33,9 +35,15 @@ public class BudgetService {
     }
 
     @Transactional(readOnly = true)
-    public BudgetDTO findByCategory(CategoryDTO categoryDTO) {
+    public List<BudgetDTO> findAllByMember(MemberEntity member) {
+        List<BudgetEntity> result = budgetRepository.findAllByMember(member);
+        return result.stream().map(entity -> modelMapper.map(entity, BudgetDTO.class)).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public BudgetDTO findByCategory(CategoryDTO categoryDTO, MemberEntity member) {
         CategoryEntity categoryEntity = modelMapper.map(categoryDTO, CategoryEntity.class);
-        Optional<BudgetEntity> result = budgetRepository.findByCategory(categoryEntity);
+        Optional<BudgetEntity> result = budgetRepository.findByCategoryAndMember(categoryEntity, member);
 
         return result.isPresent() ? modelMapper.map(result.get(), BudgetDTO.class) : null;
     }
@@ -48,6 +56,17 @@ public class BudgetService {
 
     @Transactional
     public BudgetDTO register(BudgetDTO budgetDTO) {
+        BudgetEntity entity = modelMapper.map(budgetDTO, BudgetEntity.class);
+        BudgetEntity budget = budgetRepository.save(entity);
+
+        return modelMapper.map(budget, BudgetDTO.class);
+    }
+
+    @Transactional
+    public BudgetDTO register(MemberEntity member, BudgetDTO budgetDTO) {
+        MemberDTO memberDTO = modelMapper.map(member, MemberDTO.class);
+        budgetDTO.setMember(memberDTO);
+
         BudgetEntity entity = modelMapper.map(budgetDTO, BudgetEntity.class);
         BudgetEntity budget = budgetRepository.save(entity);
 

@@ -30,6 +30,10 @@ public class AccountEntity extends BaseEntity {
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private MemberEntity member;
+
     public void update(AccountEntity account) {
         String description = account.getDescription();
         int money = account.getMoney();

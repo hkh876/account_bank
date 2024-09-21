@@ -14,6 +14,21 @@
     width: 24px;
 }
 
+.fc .fc-view-harness {
+    transition: all .5s ease-in-out;
+}
+
+.fc.hide .fc-view-harness {
+    height: 0px !important;
+    min-height: 0px;
+    opacity: 0;
+}
+
+.display-text {
+    cursor: pointer;
+    z-index: 2;
+}
+
 .item-container {
     overflow-y: auto;
 }
@@ -79,5 +94,21 @@
 
     .fc .fc-view-harness {
         min-height: 425px;
+    }
+}
+
+/* ~374px */
+@media screen and (max-width: 374px) {
+    .fc .fc-toolbar-title {
+        max-width: 4.375rem;
+        font-size: 1rem;
+    }
+
+    .fc .fc-button {
+        font-size: 0.875rem;
+    }
+
+    .fc .fc-view-harness {
+        min-height: 26.625rem;
     }
 }

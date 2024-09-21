@@ -10,10 +10,13 @@ function makeItemContainer(eventData) {
         dataList.forEach(value => {
             // Item container
             const div = document.createElement("div");
-            div.classList.add("d-flex", "align-items-center", "mb-2");
+            div.classList.add("mb-2");
             div.addEventListener("click", () => {
                 location.href="/account_bank/detail?id=" + value.id;
             });
+
+            const moneyContainer = document.createElement("div");
+            moneyContainer.classList.add("d-flex", "align-items-center");
 
             const targetIcon = document.createElement("img");
             targetIcon.className = "target-icon";
@@ -25,15 +28,16 @@ function makeItemContainer(eventData) {
             categoryNameSpan.classList.add("ms-2", "category-name");
             categoryNameSpan.textContent = value.category.name;
             const descriptionDiv = document.createElement("div")
-            descriptionDiv.classList.add("col-sm-6", "ms-3", "me-auto", "description-text");
+            descriptionDiv.classList.add("mt-2", "description-text");
             descriptionDiv.textContent = value.description;
             const moneySpan = document.createElement("span");
-            moneySpan.classList.add("money-text");
+            moneySpan.classList.add("ms-auto", "money-text");
 
             let money = value.division === "EXPENSE" ? -1 * value.money : value.money;
             moneySpan.textContent = money.toLocaleString() + "원";
 
-            div.append(targetIcon, categoryIcon, categoryNameSpan, descriptionDiv, moneySpan);
+            moneyContainer.append(targetIcon, categoryIcon, categoryNameSpan, moneySpan);
+            div.append(moneyContainer, descriptionDiv);
             root.appendChild(div);
         })
     }
@@ -123,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
             makeItemContainer(selectData);
         },
         dateClick: (info) => {
-           location.href = "/account_bank/register?date=" + info.dateStr;
+            location.href = "/account_bank/register?date=" + info.dateStr;
         },
     });
 
@@ -148,4 +152,28 @@ document.addEventListener("DOMContentLoaded", () => {
     todayButton.addEventListener("click", () => {
         sendRequest(dateToString(calendar.getDate()), calendar);
     });
+
+    // Resize event
+    window.addEventListener("resize", () => {
+        const fcView = document.querySelector(".fc-view-harness");
+        const fcTableHead = document.querySelector(".fc-scrollgrid > thead");
+        const fcTable = document.querySelector(".fc-scrollgrid-sync-table");
+
+        if (!calendarElement.classList.contains("hide")) {
+            setTimeout(() => {
+                fcView.style.height = (fcTableHead.offsetHeight + fcTable.offsetHeight) + "px";
+            }, 100);
+        }
+    })
 });
+
+function onDisplayCalendarClick(element) {
+    const calendarElement = document.querySelector("#calendar");
+    calendar.classList.toggle("hide");
+
+    if (calendar.classList.contains("hide")) {
+        element.textContent = "보이기";
+    } else {
+        element.textContent = "감추기";
+    }
+}

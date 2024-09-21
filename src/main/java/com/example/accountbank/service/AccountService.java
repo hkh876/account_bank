@@ -2,8 +2,10 @@ package com.example.accountbank.service;
 
 import com.example.accountbank.dto.AccountDTO;
 import com.example.accountbank.dto.CategoryDTO;
+import com.example.accountbank.dto.MemberDTO;
 import com.example.accountbank.entity.AccountEntity;
 import com.example.accountbank.entity.CategoryEntity;
+import com.example.accountbank.entity.MemberEntity;
 import com.example.accountbank.repository.AccountRepository;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -39,6 +41,17 @@ public class AccountService {
         return modelMapper.map(result, AccountDTO.class);
     }
 
+    @Transactional
+    public AccountDTO register(MemberEntity member, AccountDTO accountDTO) {
+        MemberDTO memberDTO = modelMapper.map(member, MemberDTO.class);
+        accountDTO.setMember(memberDTO);
+
+        AccountEntity entity = modelMapper.map(accountDTO, AccountEntity.class);
+        AccountEntity result = accountRepository.save(entity);
+
+        return modelMapper.map(result, AccountDTO.class);
+    }
+
     @Transactional(readOnly = true)
     public List<AccountDTO> findAllByTargetDateBetween(LocalDateTime start, LocalDateTime end) {
         List<AccountEntity> result = accountRepository.findAllByTargetDateBetween(start, end);
@@ -46,9 +59,23 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
+    public List<AccountDTO> findAllByMemberAndTargetDateBetween(MemberEntity member, LocalDateTime start, LocalDateTime end) {
+        List<AccountEntity> result = accountRepository.findAllByMemberAndTargetDateBetween(member, start, end);
+        return result.stream().map(entity -> modelMapper.map(entity, AccountDTO.class)).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public List<AccountDTO> findAllByCategoryAndTargetDateBetween(CategoryDTO categoryDTO, LocalDateTime start, LocalDateTime end) {
         CategoryEntity category = modelMapper.map(categoryDTO, CategoryEntity.class);
         List<AccountEntity> result = accountRepository.findAllByCategoryAndTargetDateBetween(category, start, end);
+
+        return result.stream().map(entity -> modelMapper.map(entity, AccountDTO.class)).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<AccountDTO> findAllByMemberAndCategoryAndTargetDateBetween(MemberEntity member, CategoryDTO categoryDTO, LocalDateTime start, LocalDateTime end) {
+        CategoryEntity category = modelMapper.map(categoryDTO, CategoryEntity.class);
+        List<AccountEntity> result = accountRepository.findAllByMemberAndCategoryAndTargetDateBetweenOrderByTargetDate(member, category, start, end);
 
         return result.stream().map(entity -> modelMapper.map(entity, AccountDTO.class)).collect(Collectors.toList());
     }

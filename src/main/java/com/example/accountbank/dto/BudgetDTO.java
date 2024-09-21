@@ -11,6 +11,7 @@ public class BudgetDTO {
     private Long id;
     private int money;
     private CategoryDTO category;
+    private MemberDTO member;
 
     // Custom
     private Long categoryId;

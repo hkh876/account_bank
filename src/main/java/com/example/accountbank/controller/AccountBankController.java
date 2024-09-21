@@ -1,5 +1,6 @@
 package com.example.accountbank.controller;
 
+import com.example.accountbank.custom.CustomMember;
 import com.example.accountbank.dto.AccountDTO;
 import com.example.accountbank.dto.CategoryDTO;
 import com.example.accountbank.dto.TargetDTO;
@@ -10,6 +11,7 @@ import com.example.accountbank.service.DateService;
 import com.example.accountbank.service.TargetService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -76,6 +78,7 @@ public class AccountBankController {
 
     @PostMapping(ACCOUNT_BANK_REGISTER_URL)
     public String registerProcess(
+            @AuthenticationPrincipal CustomMember member,
             @Valid @ModelAttribute("account") AccountDTO accountDTO,
             BindingResult bindingResult,
             Model model) {
@@ -111,7 +114,7 @@ public class AccountBankController {
         // Fix me : 현재는 지출만
         int money = accountDTO.getMoney();
         accountDTO.setDivision(Division.EXPENSE);
-        accountService.register(accountDTO);
+        accountService.register(member.getMember(), accountDTO);
 
         return "redirect:" + ACCOUNT_BANK_CALENDAR_URL;
     }

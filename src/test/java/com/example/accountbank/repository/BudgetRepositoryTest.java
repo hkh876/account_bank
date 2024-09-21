@@ -2,6 +2,7 @@ package com.example.accountbank.repository;
 
 import com.example.accountbank.entity.BudgetEntity;
 import com.example.accountbank.entity.CategoryEntity;
+import com.example.accountbank.entity.MemberEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,9 +43,12 @@ public class BudgetRepositoryTest {
         CategoryEntity category = CategoryEntity.builder()
                 .id(1L)
                 .build();
+        MemberEntity member = MemberEntity.builder()
+                .id(1L)
+                .build();
 
         // When
-        Optional<BudgetEntity> result = repository.findByCategory(category);
+        Optional<BudgetEntity> result = repository.findByCategoryAndMember(category, member);
 
         // Then
         Assertions.assertEquals(result.isPresent(), true);
