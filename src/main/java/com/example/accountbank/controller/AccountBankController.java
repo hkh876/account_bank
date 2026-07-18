@@ -205,4 +205,14 @@ public class AccountBankController {
         accountService.deleteById(id);
         return "redirect:" + ACCOUNT_BANK_CALENDAR_URL;
     }
+
+    @GetMapping(ACCOUNT_BANK_SEARCH_URL)
+    public String searchView(String keyword, Model model) {
+        List<AccountDTO> results = accountService.searchByDescription(keyword);
+
+        model.addAttribute("results", results);
+        model.addAttribute("keyword", keyword);
+
+        return CONTENTS_ACCOUNT_BANK_SEARCH_PATH;
+    }
 }

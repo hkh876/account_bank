@@ -29,20 +29,35 @@
                         </td>
                         <td>
                             <input type="number" class="form-control text-end marketInput" min="0" th:value="${item.marketPrice}"
-                                   onkeyup="onMoneyKeyUp(this)">
+                                data-group="market" onkeyup="onMoneyKeyUp(this)" oninput="onMoneyInputChange(this.dataset.group)">
                         </td>
                         <td>
                             <input type="number" class="form-control text-end martInput" min="0" th:value="${item.martPrice}"
-                                   onkeyup="onMoneyKeyUp(this)">
+                                data-group="mart" onkeyup="onMoneyKeyUp(this)" oninput="onMoneyInputChange(this.dataset.group)">
                         </td>
                         <td>
                             <input type="number" class="form-control text-end coupangInput" min="0" th:value="${item.coupangPrice}"
-                                   onkeyup="onMoneyKeyUp(this)">
+                                data-group="coupang" onkeyup="onMoneyKeyUp(this)" oninput="onMoneyInputChange(this.dataset.group)">
                         </td>
                     </tr>
                     <tr>
                         <td colspan="4" class="text-center" onclick="addRow()">
                             <img class="add-icon" th:src="@{/images/settings/add_icon.png}" alt="add icon">
+                        </td>
+                    </tr>
+                    <tr class="fw-bold">
+                        <td class="text-center">총액</td>
+                        <td class="text-end">
+                            <span id="marketTotal">0</span>
+                            <span>원</span>
+                        </td>
+                        <td class="text-end">
+                            <span id="martTotal">0</span>
+                            <span>원</span>
+                        </td>
+                        <td class="text-end">
+                            <span id="coupangTotal">0</span>
+                            <span>원</span>
                         </td>
                     </tr>
                     </tbody>

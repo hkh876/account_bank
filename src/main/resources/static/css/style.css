@@ -27,6 +27,18 @@ table > tbody > tr {
     height: calc(var(--vh, 1vh) * 100);
 }
 
+.h-100dvh {
+    height: 100dvh;
+}
+
 .w-40p {
     width: 40%;
+}
+
+.mt-3m {
+    margin-top: -1rem;
+}
+
+.text-keep-all {
+    word-break: keep-all;
 }

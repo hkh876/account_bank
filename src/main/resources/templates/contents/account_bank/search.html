@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base_layout}">
+<head>
+    <title>검색 화면</title>
+</head>
+<body>
+    <th:block layout:fragment="contents">
+        <div class="pt-3 px-3 d-flex flex-column overflow-hidden h-100dvh">
+            <form method="get">
+                <div class="mb-3 d-flex justify-content-end">
+                    <input id="search" name="keyword" type="text" class="form-control w-40p" placeholder="검색어 입력" th:value="${keyword}" />
+                    <button type="submit" class="btn btn-light ms-1">검색</button>
+                </div>
+            </form>
+            <div class="d-flex flex-column gap-3 overflow-auto">
+                <th:block th:each="result : ${results}">
+                    <div class="pb-2 border-bottom" th:onclick="|onSearchItemClick(${result.id})|">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span class="text-keep-all description" th:text="${result.description}">설명</span>
+                            <span class="ms-2 text-nowrap" th:text="${#temporals.format(result.targetDate, 'yyyy-MM-dd')}">날짜</span>
+                        </div>
+                        <div class="text-center fw-bold">
+                            <span th:text="${#numbers.formatInteger(result.money, 3, 'COMMA')}">총액</span>원
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block layout:fragment="scripts">
+        <script th:src="@{/js/search.js}"></script>
+    </th:block>
+</body>
+</html>

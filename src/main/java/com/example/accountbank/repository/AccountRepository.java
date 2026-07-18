@@ -16,4 +16,5 @@ public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
     List<AccountEntity> findAllByCategoryAndTargetDateBetween(CategoryEntity category, LocalDateTime start, LocalDateTime end);
     List<AccountEntity> findAllByMemberAndCategoryAndTargetDateBetweenOrderByTargetDate(MemberEntity member, CategoryEntity category,
                                                                                         LocalDateTime start, LocalDateTime end);
+    List<AccountEntity> findByDescriptionContainingIgnoreCaseOrderByTargetDateDesc(String keyword);
 }

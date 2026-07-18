@@ -1,9 +1,13 @@
 const deleteIds = [];
 
+document.addEventListener("DOMContentLoaded", () => {
+    onMoneyInputChangeAll();
+});
+
 function addRow() {
     const table = document.querySelector("#shoppingTable");
     const tableRowCount = table.rows.length;
-    const newRow = table.insertRow(tableRowCount - 1);
+    const newRow = table.insertRow(tableRowCount - 2);
     newRow.className = "dataRow";
 
     // Cell 4개
@@ -21,21 +25,23 @@ function addRow() {
     `;
     marketCell.innerHTML = `
         <input type="number" class="form-control text-end marketInput" min="0" value="0"
-            onkeyup="onMoneyKeyUp(this)">
+            data-group="market" onkeyup="onMoneyKeyUp(this)" oninput="onMoneyInputChange(this.dataset.group)">
     `;
     martCell.innerHTML = `
         <input type="number" class="form-control text-end martInput" min="0" value="0"
-            onkeyup="onMoneyKeyUp(this)">
+            data-group="mart" onkeyup="onMoneyKeyUp(this)" oninput="onMoneyInputChange(this.dataset.group)">
     `;
     coupangCell.innerHTML = `
         <input type="number" class="form-control text-end coupangInput" min="0" value="0"
-           onkeyup="onMoneyKeyUp(this)">
-    `
+           data-group="coupang" onkeyup="onMoneyKeyUp(this)" oninput="onMoneyInputChange(this.dataset.group)">
+    `;
 }
 
 function deleteRow(rowIndex) {
     const table = document.querySelector("#shoppingTable");
     table.deleteRow(rowIndex);
+
+    onMoneyInputChangeAll();
 }
 
 function onDeleteClick() {
@@ -52,6 +58,31 @@ function onDeleteIconClick(icon, itemId) {
 
     const parentRow = icon.parentElement.parentElement;
     deleteRow(parentRow.rowIndex);
+}
+
+function onMoneyInputChangeAll() {
+    const groups = ["market", "mart", "coupang"];
+    groups.forEach(group => onMoneyInputChange(group));
+}
+
+function onMoneyInputChange(groupName) {
+    if (!groupName) {
+        return;
+    }
+
+    // 총액 계산
+    const groupInputs = document.querySelectorAll(`input[data-group="${groupName}"]`);
+    let total = 0;
+
+    groupInputs.forEach(input => {
+        total += parseInt(input.value) || 0;
+    });
+
+    // UI 업데이트
+    const displayElement = document.querySelector(`#${groupName}Total`);
+    if (displayElement) {
+        displayElement.textContent = total.toLocaleString();
+    }
 }
 
 function onSaveClick() {

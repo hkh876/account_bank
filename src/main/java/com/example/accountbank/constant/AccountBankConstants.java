@@ -19,6 +19,7 @@ public class AccountBankConstants {
     public static final String ACCOUNT_BANK_CALENDAR_URL = ACCOUNT_BANK_BASE_URL + "/calendar";
     public static final String ACCOUNT_BANK_DETAIL_URL = ACCOUNT_BANK_BASE_URL + "/detail";
     public static final String ACCOUNT_BANK_DELETE_URL = ACCOUNT_BANK_BASE_URL + "/delete";
+    public static final String ACCOUNT_BANK_SEARCH_URL = ACCOUNT_BANK_BASE_URL + "/search";
 
     public static final String SETTINGS_URL = ACCOUNT_BANK_BASE_URL + "/settings";
     public static final String SETTINGS_BUDGET_URL = SETTINGS_URL + "/budget";
@@ -49,6 +50,7 @@ public class AccountBankConstants {
     public static final String CONTENTS_ACCOUNT_BANK_REGISTER_PATH = CONTENTS_ACCOUNT_BANK_BASE_PATH + "/register";
     public static final String CONTENTS_ACCOUNT_BANK_CALENDAR_PATH = CONTENTS_ACCOUNT_BANK_BASE_PATH + "/calendar";
     public static final String CONTENTS_ACCOUNT_BANK_DETAIL_PATH = CONTENTS_ACCOUNT_BANK_BASE_PATH + "/detail";
+    public static final String CONTENTS_ACCOUNT_BANK_SEARCH_PATH = CONTENTS_ACCOUNT_BANK_BASE_PATH + "/search";
     
     private static final String CONTENTS_SETTINGS_BASE_PATH = CONTENTS_BASE_PATH + "/settings";
     public static final String CONTENTS_SETTINGS_LIST_PATH = CONTENTS_SETTINGS_BASE_PATH + "/list";

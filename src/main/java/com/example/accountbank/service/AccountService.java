@@ -108,4 +108,10 @@ public class AccountService {
                .mapToInt(dto -> Math.abs(dto.getMoney()))
                .sum();
     }
+
+    @Transactional(readOnly = true)
+    public List<AccountDTO> searchByDescription(String keyword) {
+        List<AccountEntity> results = accountRepository.findByDescriptionContainingIgnoreCaseOrderByTargetDateDesc(keyword);
+        return results.stream().map(entity -> modelMapper.map(entity, AccountDTO.class)).collect(Collectors.toList());
+    }
 }

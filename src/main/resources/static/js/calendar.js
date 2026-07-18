@@ -118,6 +118,19 @@ function makeSettingIcon() {
     toolbar.appendChild(aTag);
 }
 
+function makeSearch() {
+    const toolbar = document.querySelector(".fc-header-toolbar");
+    const newElement = document.createElement("div");
+
+    newElement.className = "mt-3m mb-2 d-flex justify-content-end";
+    newElement.innerHTML = `
+        <input id="search" type="text" class="form-control w-40p" placeholder="검색어 입력" />
+        <button type="button" class="btn btn-light ms-1" onclick="onSearchClick()">검색</button>
+    `;
+
+    toolbar.after(newElement);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const calendarElement = document.querySelector("#calendar");
     const calendar = new FullCalendar.Calendar(calendarElement, {
@@ -136,6 +149,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Add settings
     makeSettingIcon();
+
+    // Add search
+    makeSearch();
 
     // Click event
     const prevButton = document.querySelector(".fc-prev-button");
@@ -175,5 +191,13 @@ function onDisplayCalendarClick(element) {
         element.textContent = "보이기";
     } else {
         element.textContent = "감추기";
+    }
+}
+
+function onSearchClick() {
+    const searchElement = document.querySelector("#search");
+
+    if (searchElement) {
+        location.href = `/account_bank/search?keyword=${encodeURIComponent(searchElement.value)}`;
     }
 }
